@@ -1,0 +1,30 @@
+name: Generate and Commit Xcode Project
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Swift
+        uses: fwal/setup-swift@v1
+        with:
+          swift-version: "5.9"
+
+      - name: Generate Xcode project
+        run: ./generate_xcodeproj.sh
+
+      - name: Commit Xcode project
+        run: |
+          git config user.name "roda-ai-bot"
+          git config user.email "bot@roda-ai.local"
+          git add *.xcodeproj
+          git commit -m "chore(ci): auto-generate Xcode project"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
