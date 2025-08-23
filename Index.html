@@ -2,54 +2,187 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RODA AI</title>
-  <link rel="stylesheet" href="/assets/style.css" />
-  <link rel="icon" href="/assets/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RODA AI Assistant</title>
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
+  <script defer src="ai.js"></script>
+  <style>
+    /* Basic Discord-like Layout */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #2f3136;
+      color: #fff;
+      display: flex;
+      height: 100vh;
+    }
+
+    /* Left Sidebar (servers) */
+    .sidebar {
+      width: 70px;
+      background: #202225;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0;
+    }
+
+    .server-icon {
+      width: 50px;
+      height: 50px;
+      background: #5865f2;
+      border-radius: 50%;
+      margin: 10px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* Channel List */
+    .channels {
+      width: 250px;
+      background: #2f3136;
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+    }
+
+    .channel {
+      padding: 8px 10px;
+      border-radius: 4px;
+      margin: 3px 0;
+      cursor: pointer;
+      color: #b9bbbe;
+    }
+
+    .channel:hover {
+      background: #40444b;
+      color: #fff;
+    }
+
+    .channel.active {
+      background: #5865f2;
+      color: #fff;
+    }
+
+    /* Chat Area */
+    .chat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #36393f;
+    }
+
+    .chat-header {
+      padding: 10px;
+      border-bottom: 1px solid #202225;
+      background: #2f3136;
+      font-weight: bold;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+    }
+
+    .message {
+      margin-bottom: 12px;
+    }
+
+    .message strong {
+      color: #fff;
+    }
+
+    .message span {
+      color: #b9bbbe;
+      margin-left: 5px;
+    }
+
+    /* Input */
+    .chat-input {
+      display: flex;
+      padding: 10px;
+      background: #40444b;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      background: #2f3136;
+      color: #fff;
+    }
+
+    .chat-input button {
+      margin-left: 10px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      background: #5865f2;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .chat-input button:hover {
+      background: #4752c4;
+    }
+  </style>
 </head>
 <body>
-  <div class="app">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <h2>RODA AI</h2>
-      <ul>
-        <li class="active"># general</li>
-        <li># analysis</li>
-        <li># multimedia</li>
-        <li># dev-support</li>
-      </ul>
-    </aside>
-
-    <!-- Main Chat -->
-    <main class="chat">
-      <header class="chat-header">
-        <h3># general</h3>
-      </header>
-
-      <!-- History -->
-      <section id="history-section">
-        <h2>Analysis History</h2>
-        <ul id="analysis-list"></ul>
-      </section>
-
-      <!-- Responses -->
-      <div id="response-container">
-        <h2>RODA AI Responses</h2>
-        <div id="text-responses"></div>
-        <div id="image-responses"></div>
-      </div>
-
-      <!-- Inputs -->
-      <footer class="chat-input">
-        <input type="text" id="text-input" placeholder="Message #general" />
-        <button id="submit-text">Send</button>
-        <input type="file" id="file-input" accept="image/*" hidden />
-        <button id="upload-button">📷</button>
-        <button id="start-speech">🎤</button>
-      </footer>
-    </main>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="server-icon">R</div>
+    <div class="server-icon">W</div>
+    <div class="server-icon">B</div>
   </div>
 
-  <script type="module" src="/assets/script.js"></script>
+  <!-- Channels -->
+  <div class="channels">
+    <div class="channel active"># general</div>
+    <div class="channel"># ai-chat</div>
+    <div class="channel"># blockchain</div>
+    <div class="channel"># web4</div>
+  </div>
+
+  <!-- Chat Area -->
+  <div class="chat">
+    <div class="chat-header"># general</div>
+    <div class="chat-messages" id="chat-messages">
+      <div class="message"><strong>RODA</strong><span>Hello! 👋 How can I assist with your project today?</span></div>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="userInput" placeholder="Send a message..." />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    function sendMessage() {
+      const input = document.getElementById("userInput");
+      const msg = input.value.trim();
+      if (msg === "") return;
+
+      const chatMessages = document.getElementById("chat-messages");
+      const userMessage = document.createElement("div");
+      userMessage.classList.add("message");
+      userMessage.innerHTML = `<strong>You</strong><span>${msg}</span>`;
+      chatMessages.appendChild(userMessage);
+
+      // Simulated AI response
+      const botMessage = document.createElement("div");
+      botMessage.classList.add("message");
+      botMessage.innerHTML = `<strong>RODA</strong><span>🤖 Processing: "${msg}"</span>`;
+      chatMessages.appendChild(botMessage);
+
+      input.value = "";
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+  </script>
 </body>
 </html>
