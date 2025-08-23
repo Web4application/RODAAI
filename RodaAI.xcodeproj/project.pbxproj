@@ -6,108 +6,172 @@
   objects = {
 
 /* Begin PBXBuildFile section */
-    1A0000010000000000000001 /* RodaAIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000110000000000000001 /* RodaAIApp.swift */; };
-    1A0000020000000000000001 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000120000000000000001 /* ContentView.swift */; };
-    1A0000030000000000000001 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1A0000130000000000000001 /* Info.plist */; };
+    A10000010000000000000001 /* RodaAIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000110000000000000001 /* RodaAIApp.swift */; };
+    A10000020000000000000001 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000120000000000000001 /* ContentView.swift */; };
+    A10000030000000000000001 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A10000130000000000000001 /* Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-    1A0000110000000000000001 /* RodaAIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RodaAIApp.swift; sourceTree = "<group>"; };
-    1A0000120000000000000001 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-    1A0000130000000000000001 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-    1A0000200000000000000001 /* RodaAI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RodaAI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+    A10000110000000000000001 /* RodaAIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RodaAIApp.swift; sourceTree = "<group>"; };
+    A10000120000000000000001 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+    A10000130000000000000001 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+    A10000200000000000000001 /* RodaAI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RodaAI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+    A10000300000000000000001 /* RodaAILibrary.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RodaAILibrary.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFrameworksBuildPhase section */
+    A10005000000000000000001 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; files = ( ); };
+    A10005010000000000000001 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; files = ( ); };
+/* End PBXFrameworksBuildPhase section */
+
 /* Begin PBXGroup section */
-    1A0001000000000000000001 = {
+    A10001000000000000000001 = {
       isa = PBXGroup;
       children = (
-        1A0001100000000000000001 /* RodaAI */,
-        1A0002000000000000000001 /* Products */,
+        A10001100000000000000001 /* RodaAI */,
+        A10001200000000000000001 /* RodaAILibrary */,
+        A10002000000000000000001 /* Products */,
       );
       sourceTree = "<group>";
     };
-    1A0001100000000000000001 /* RodaAI */ = {
+    A10001100000000000000001 /* RodaAI */ = {
       isa = PBXGroup;
       children = (
-        1A0000110000000000000001 /* RodaAIApp.swift */,
-        1A0000120000000000000001 /* ContentView.swift */,
-        1A0000130000000000000001 /* Info.plist */,
+        A1000011000000000000000001 /* RodaAIApp.swift */,
+        A1000012000000000000000001 /* ContentView.swift */,
+        A1000013000000000000000001 /* Info.plist */,
       );
       path = RodaAI;
       sourceTree = "<group>";
     };
-    1A0002000000000000000001 /* Products */ = {
+    A10001200000000000000001 /* RodaAILibrary */ = {
       isa = PBXGroup;
       children = (
-        1A0000200000000000000001 /* RodaAI.app */,
+        /* Files under Sources/ will be injected by wire-sources.rb */
+      );
+      name = RodaAILibrary;
+      path = Sources;
+      sourceTree = "<group>";
+    };
+    A10002000000000000000001 /* Products */ = {
+      isa = PBXGroup;
+      children = (
+        A10000200000000000000001 /* RodaAI.app */,
+        A10000300000000000000001 /* RodaAILibrary.framework */,
       );
       name = Products;
       sourceTree = "<group>";
     };
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+    A10006000000000000000001 /* Headers */ = {isa = PBXHeadersBuildPhase; files = ( ); };
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
-    1A0003000000000000000001 /* RodaAI */ = {
+    A10003000000000000000001 /* RodaAI */ = {
       isa = PBXNativeTarget;
-      buildConfigurationList = 1A0003100000000000000001 /* Build configuration list for RodaAI */;
+      buildConfigurationList = A10003100000000000000001 /* Build configuration list for RodaAI */;
       buildPhases = (
-        1A0004000000000000000001 /* Sources */,
-        1A0005000000000000000001 /* Frameworks */,
-        1A0006000000000000000001 /* Resources */,
+        A10004000000000000000001 /* Sources */,
+        A10005000000000000000001 /* Frameworks */,
+        A10006010000000000000001 /* Resources */,
+      );
+      buildRules = ();
+      dependencies = (
+        A1000D000000000000000001 /* PBXTargetDependency RodaAILibrary */,
+      );
+      name = RodaAI;
+      productName = RodaAI;
+      productReference = A10000200000000000000001 /* RodaAI.app */;
+      productType = "com.apple.product-type.application";
+    };
+
+    A10003010000000000000001 /* RodaAILibrary */ = {
+      isa = PBXNativeTarget;
+      buildConfigurationList = A10003110000000000000001 /* Build configuration list for RodaAILibrary */;
+      buildPhases = (
+        A10004010000000000000001 /* Sources */,
+        A10005010000000000000001 /* Frameworks */,
+        A10006000000000000000001 /* Headers */,
       );
       buildRules = ();
       dependencies = ();
-      name = RodaAI;
-      productName = RodaAI;
-      productReference = 1A0000200000000000000001 /* RodaAI.app */;
-      productType = "com.apple.product-type.application";
+      name = RodaAILibrary;
+      productName = RodaAILibrary;
+      productReference = A10000300000000000000001 /* RodaAILibrary.framework */;
+      productType = "com.apple.product-type.framework";
     };
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-    1A0007000000000000000001 /* Project object */ = {
+    A10007000000000000000001 /* Project object */ = {
       isa = PBXProject;
       attributes = {
-        LastUpgradeCheck = 1430;
+        LastUpgradeCheck = 1500;
         TargetAttributes = {
-          1A0003000000000000000001 = {
-            CreatedOnToolsVersion = 14.3;
-          };
+          A10003000000000000000001 = { CreatedOnToolsVersion = 15.0; };
+          A10003010000000000000001 = { CreatedOnToolsVersion = 15.0; };
         };
       };
-      buildConfigurationList = 1A0007100000000000000001 /* Build configuration list for Project */;
+      buildConfigurationList = A10007100000000000000001 /* Build configuration list for Project */;
       compatibilityVersion = "Xcode 14.0";
       developmentRegion = en;
       hasScannedForEncodings = 0;
       knownRegions = ( en, Base );
-      mainGroup = 1A0001000000000000000001;
-      productRefGroup = 1A0002000000000000000001 /* Products */;
-      targets = ( 1A0003000000000000000001 /* RodaAI */ );
+      mainGroup = A10001000000000000000001;
+      productRefGroup = A10002000000000000000001 /* Products */;
+      targets = ( A10003000000000000000001 /* RodaAI */, A10003010000000000000000001 /* RodaAILibrary */ );
     };
 /* End PBXProject section */
 
-/* Begin PBXSourcesBuildPhase section */
-    1A0004000000000000000001 /* Sources */ = {
-      isa = PBXSourcesBuildPhase;
-      files = (
-        1A0000010000000000000001 /* RodaAIApp.swift in Sources */,
-        1A0000020000000000000001 /* ContentView.swift in Sources */,
-      );
-    };
-/* End PBXSourcesBuildPhase section */
-
 /* Begin PBXResourcesBuildPhase section */
-    1A0006000000000000000001 /* Resources */ = {
+    A10006010000000000000001 /* Resources */ = {
       isa = PBXResourcesBuildPhase;
       files = (
-        1A0000030000000000000001 /* Info.plist in Resources */,
+        A10000030000000000000001 /* Info.plist in Resources */,
       );
     };
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXSourcesBuildPhase section */
+    A10004000000000000000001 /* Sources */ = {
+      isa = PBXSourcesBuildPhase;
+      files = (
+        A10000010000000000000001 /* RodaAIApp.swift in Sources */,
+        A10000020000000000000001 /* ContentView.swift in Sources */,
+      );
+    };
+    A10004010000000000000001 /* Sources */ = {
+      isa = PBXSourcesBuildPhase;
+      files = (
+        /* Will be filled by wire-sources.rb with all Sources/**/*.swift */
+      );
+    };
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+    A1000D000000000000000001 /* PBXTargetDependency RodaAILibrary */ = {
+      isa = PBXTargetDependency;
+      target = A10003010000000000000001 /* RodaAILibrary */;
+    };
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
-    1A0008000000000000000001 /* Debug */ = {
+    /* Project-level configs */
+    A10008000000000000000001 /* Debug */ = {
+      isa = XCBuildConfiguration;
+      buildSettings = { };
+      name = Debug;
+    };
+    A10008010000000000000001 /* Release */ = {
+      isa = XCBuildConfiguration;
+      buildSettings = { };
+      name = Release;
+    };
+
+    /* App target configs */
+    A10009000000000000000001 /* Debug */ = {
       isa = XCBuildConfiguration;
       buildSettings = {
         INFOPLIST_FILE = RodaAI/Info.plist;
@@ -115,10 +179,12 @@
         PRODUCT_NAME = "$(TARGET_NAME)";
         SWIFT_VERSION = 5.9;
         IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+        TARGETED_DEVICE_FAMILY = "1,2";
+        LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
       };
       name = Debug;
     };
-    1A0009000000000000000001 /* Release */ = {
+    A10009010000000000000001 /* Release */ = {
       isa = XCBuildConfiguration;
       buildSettings = {
         INFOPLIST_FILE = RodaAI/Info.plist;
@@ -126,26 +192,60 @@
         PRODUCT_NAME = "$(TARGET_NAME)";
         SWIFT_VERSION = 5.9;
         IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+        TARGETED_DEVICE_FAMILY = "1,2";
+        LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+      };
+      name = Release;
+    };
+
+    /* Framework target configs */
+    A1000A00000000000000001 /* Debug */ = {
+      isa = XCBuildConfiguration;
+      buildSettings = {
+        PRODUCT_BUNDLE_IDENTIFIER = com.web4application.rodaai.library;
+        PRODUCT_NAME = RodaAILibrary;
+        SWIFT_VERSION = 5.9;
+        IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+        DEFINES_MODULE = YES;
+        SKIP_INSTALL = YES;
+      };
+      name = Debug;
+    };
+    A1000A010000000000000001 /* Release */ = {
+      isa = XCBuildConfiguration;
+      buildSettings = {
+        PRODUCT_BUNDLE_IDENTIFIER = com.web4application.rodaai.library;
+        PRODUCT_NAME = RodaAILibrary;
+        SWIFT_VERSION = 5.9;
+        IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+        DEFINES_MODULE = YES;
+        SKIP_INSTALL = YES;
       };
       name = Release;
     };
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-    1A0003100000000000000001 /* Build configuration list for RodaAI */ = {
+    A10003100000000000000001 /* Build configuration list for RodaAI */ = {
       isa = XCConfigurationList;
-      buildConfigurations = ( 1A0008000000000000000001, 1A0009000000000000000001 );
+      buildConfigurations = ( A10009000000000000000001, A10009010000000000000001 );
       defaultConfigurationIsVisible = 0;
       defaultConfigurationName = Release;
     };
-    1A0007100000000000000001 /* Build configuration list for Project */ = {
+    A10003110000000000000001 /* Build configuration list for RodaAILibrary */ = {
       isa = XCConfigurationList;
-      buildConfigurations = ( 1A0008000000000000000001, 1A0009000000000000000001 );
+      buildConfigurations = ( A1000A00000000000000001, A1000A010000000000000001 );
+      defaultConfigurationIsVisible = 0;
+      defaultConfigurationName = Release;
+    };
+    A10007100000000000000001 /* Build configuration list for Project */ = {
+      isa = XCConfigurationList;
+      buildConfigurations = ( A10008000000000000000001, A10008010000000000000001 );
       defaultConfigurationIsVisible = 0;
       defaultConfigurationName = Release;
     };
 /* End XCConfigurationList section */
 
   };
-  rootObject = 1A0007000000000000000001 /* Project object */;
+  rootObject = A10007000000000000000001 /* Project object */;
 }
