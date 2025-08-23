@@ -38,3 +38,9 @@ docker run -d -p 8000:8000 roda-ai-api
 
 az login
 az webapp up --name roda-ai-app --runtime "NODE|18-lts" --sku F1
+
+brew install xcodegen   # one-time install
+xcodegen generate       # creates RodaAI.xcodeproj
+open RodaAI.xcodeproj   # ready to build in Xcode
+
+xcodebuild -project RodaAI.xcodeproj -scheme RodaAI build
