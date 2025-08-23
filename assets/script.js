@@ -1,118 +1,156 @@
-// script.js
+// /assets/script.js
+// Handles UI, channels, input, file upload, speech recognition and calling ai.js
 
-// Wait for the DOM to fully load before executing
+import { sendChatMessage, uploadImage, fetchHistory } from "./ai.js";
+
 document.addEventListener("DOMContentLoaded", () => {
-    const app = document.getElementById("app");
+  // Elements
+  const chatMessages = document.getElementById("chat-messages");
+  const userInput = document.getElementById("userInput");
+  const sendBtn = document.querySelector(".chat-input button");
+  const channels = Array.from(document.querySelectorAll(".channel"));
+  const fileBtn = document.getElementById("upload-button");
+  const hiddenFile = document.getElementById("file-input"); // ensure exists or create
+  const micBtn = document.getElementById("mic-button");     // ensure exists or create
 
-    if (!app) {
-        console.error("Error: App container (#app) not found.");
-        return;
-    }
+  // State
+  let activeChannel = "general";
 
-    // Initialize RODA AI
-    initApp(app);
-});
+  // Helpers
+  function createMessageElement(who, text, opts = {}) {
+    const div = document.createElement("div");
+    div.classList.add("message");
+    if (who === "you") div.classList.add("user");
+    const strong = `<strong>${who === "you" ? "You" : "RODA"}</strong>`;
+    const time = `<span class="timestamp">${new Date().toLocaleTimeString()}</span>`;
+    const contentHTML = `<div class="message-content">${strong} ${opts.withTime ? time : ""}<div class="msg-text">${text}</div></div>`;
+    div.innerHTML = contentHTML;
+    return div;
+  }
 
-/**
- * Initializes the app.
- * @param {HTMLElement} app - The main app container.
- */
-function initApp(app) {
-    // Create a welcome message
-    const welcomeMessage = document.createElement("div");
-    welcomeMessage.id = "welcome-message";
-    welcomeMessage.textContent = "Welcome to RODA AI!";
+  function appendAndScroll(el) {
+    chatMessages.appendChild(el);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
 
-    // Add styles to the welcome message
-    welcomeMessage.style.fontSize = "24px";
-    welcomeMessage.style.fontWeight = "bold";
-    welcomeMessage.style.marginBottom = "20px";
-
-    // Append welcome message to the app container
-    app.appendChild(welcomeMessage);
-
-    // Create an input field for user interaction
-    const userInput = document.createElement("input");
-    userInput.type = "text";
-    userInput.id = "user-input";
-    userInput.placeholder = "Type your question here...";
-    userInput.style.width = "80%";
-    userInput.style.padding = "10px";
-    userInput.style.marginBottom = "10px";
-
-    // Append the input field to the app container
-    app.appendChild(userInput);
-
-    // Create a button for submitting queries
-    const submitButton = document.createElement("button");
-    submitButton.id = "submit-button";
-    submitButton.textContent = "Submit";
-    submitButton.style.padding = "10px 20px";
-    submitButton.style.marginLeft = "10px";
-    submitButton.style.cursor = "pointer";
-
-    // Append the button to the app container
-    app.appendChild(submitButton);
-
-    // Create a container for displaying responses
-    const responseContainer = document.createElement("div");
-    responseContainer.id = "response-container";
-    responseContainer.style.marginTop = "20px";
-
-    // Append the response container to the app
-    app.appendChild(responseContainer);
-
-    // Attach an event listener to the submit button
-    submitButton.addEventListener("click", () => {
-        const userInputValue = userInput.value.trim();
-        if (userInputValue) {
-            handleUserInput(userInputValue, responseContainer);
-        }
+  // Channel switching
+  channels.forEach(c => {
+    c.addEventListener("click", () => {
+      channels.forEach(x => x.classList.remove("active"));
+      c.classList.add("active");
+      activeChannel = c.textContent.trim().replace(/^#\s*/, "") || "general";
+      document.querySelector(".chat-header").textContent = `# ${activeChannel}`;
+      // optionally load channel-specific history
+      loadHistory();
     });
-}
+  });
 
-/**
- * Handles user input and generates a response.
- * @param {string} input - The user's input text.
- * @param {HTMLElement} responseContainer - The container to display responses.
- */
-function handleUserInput(input, responseContainer) {
-    // Clear the input field
-    const userInput = document.getElementById("user-input");
+  // send message
+  async function sendMessage() {
+    const text = userInput.value.trim();
+    if (!text) return;
+    appendAndScroll(createMessageElement("you", text, { withTime: true }));
     userInput.value = "";
+    // show "typing"
+    const typingEl = createMessageElement("RODA", "⏳ thinking...", { withTime: true });
+    appendAndScroll(typingEl);
 
-    // Display the user's input
-    const userMessage = document.createElement("div");
-    userMessage.textContent = `You: ${input}`;
-    userMessage.style.marginBottom = "10px";
-    userMessage.style.color = "blue";
-
-    responseContainer.appendChild(userMessage);
-
-    // Simulate AI response
-    const aiResponse = document.createElement("div");
-    aiResponse.textContent = "RODA AI is thinking...";
-    aiResponse.style.marginBottom = "10px";
-    aiResponse.style.color = "green";
-
-    responseContainer.appendChild(aiResponse);
-
- // Call FastAPI for actual prediction
-fetch("http://localhost:8000/predict", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ features: input.split(" ") })  // Adjust this depending on your model input
-})
-.then(response => response.json())
-.then(data => {
-    if (data.prediction !== undefined) {
-        aiResponse.textContent = `RODA AI: ${data.prediction}`;
-    } else {
-        aiResponse.textContent = `Error: ${data.error}`;
+    try {
+      const res = await sendChatMessage({ message: text, channel: activeChannel });
+      // replace typing with actual reply
+      typingEl.querySelector(".msg-text").textContent = res.reply || "No reply (empty)";
+      if (res.attachments && res.attachments.length) {
+        res.attachments.forEach(att => {
+          if (att.type === "image" && att.url) {
+            const img = document.createElement("img");
+            img.src = att.url;
+            img.style.maxWidth = "60%";
+            img.style.borderRadius = "8px";
+            typingEl.appendChild(img);
+          }
+        });
+      }
+    } catch (err) {
+      typingEl.querySelector(".msg-text").textContent = "⚠️ Error: " + (err.message || err);
     }
-})
-.catch(error => {
-    aiResponse.textContent = "An error occurred: " + error;
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  sendBtn.addEventListener("click", sendMessage);
+  userInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") sendMessage();
+  });
+
+  // File upload button (if present)
+  if (fileBtn && hiddenFile) {
+    fileBtn.addEventListener("click", () => hiddenFile.click());
+    hiddenFile.addEventListener("change", async (ev) => {
+      const file = ev.target.files[0];
+      if (!file) return;
+      appendAndScroll(createMessageElement("you", `📷 image: ${file.name}`, { withTime: true }));
+      const uploading = createMessageElement("RODA", "Uploading image...", { withTime: true });
+      appendAndScroll(uploading);
+      try {
+        const res = await uploadImage(file, { channel: activeChannel });
+        uploading.querySelector(".msg-text").textContent = res.analysis || res.message || "Image uploaded";
+        if (res.url) {
+          const img = document.createElement("img");
+          img.src = res.url;
+          img.style.maxWidth = "60%";
+          img.style.borderRadius = "8px";
+          uploading.appendChild(img);
+        }
+      } catch (err) {
+        uploading.querySelector(".msg-text").textContent = "Upload failed: " + err.message;
+      }
+    });
+  }
+
+  // Speech recognition
+  if (micBtn) {
+    let recognition;
+    if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SR();
+      recognition.lang = "en-US";
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+      recognition.onresult = (ev) => {
+        const text = ev.results[0][0].transcript;
+        userInput.value = text;
+        sendMessage();
+      };
+      recognition.onerror = (ev) => {
+        console.warn("Speech error", ev);
+      };
+    } else {
+      micBtn.disabled = true;
+      micBtn.title = "Speech recognition not supported in this browser";
+    }
+
+    micBtn.addEventListener("click", () => {
+      if (!recognition) return;
+      recognition.start();
+    });
+  }
+
+  // Load history (channel-specific)
+  async function loadHistory() {
+    try {
+      const hist = await fetchHistory(activeChannel);
+      // hist expected: [{timestamp, text, analysis, from}]
+      chatMessages.innerHTML = "";
+      hist.forEach(item => {
+        const who = item.from === "user" ? "you" : "RODA";
+        const el = createMessageElement(who === "you" ? "you" : "RODA", `${item.text}${item.analysis ? "\n\n" + item.analysis : ""}`, { withTime: true });
+        appendAndScroll(el);
+      });
+    } catch (err) {
+      console.warn("Failed to load history:", err);
+    }
+  }
+
+  // Initial load
+  loadHistory();
+
 });
