@@ -1,0 +1,44 @@
+name: iOS App CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Ruby & gems
+        run: |
+          ruby -v
+          gem install bundler
+          bundle install
+
+      - name: Wire Sources into Xcode project
+        run: ruby wire-sources.rb
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+
+      - name: Build App (Simulator)
+        run: |
+          xcodebuild \
+            -project "RodaAI.xcodeproj" \
+            -scheme "RodaAI" \
+            -destination 'platform=iOS Simulator,name=iPhone 14' \
+            clean build
+
+      - name: Archive (Release iOS)
+        if: github.ref == 'refs/heads/main'
+        run: |
+          xcodebuild \
+            -project "RodaAI.xcodeproj" \
+            -scheme "RodaAI" \
+            -sdk iphoneos \
+            -configuration Release \
+            archive -archivePath $PWD/build/RodaAI.xcarchive
