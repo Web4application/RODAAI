@@ -1,0 +1,33 @@
+name: RodaAI
+options:
+  bundleIdPrefix: com.web4application
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+
+targets:
+  RodaAI:
+    type: application
+    platform: iOS
+    sources:
+      - path: RodaAI
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.web4application.rodaai
+      SWIFT_VERSION: 5.9
+      INFOPLIST_FILE: RodaAI/Info.plist
+    dependencies:
+      - target: RodaAILibrary
+
+  RodaAILibrary:
+    type: framework
+    platform: iOS
+    sources:
+      - path: Sources
+
+  RodaAITests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests
+    dependencies:
+      - target: RodaAILibrary
