@@ -44,3 +44,6 @@ xcodegen generate       # creates RodaAI.xcodeproj
 open RodaAI.xcodeproj   # ready to build in Xcode
 
 xcodebuild -project RodaAI.xcodeproj -scheme RodaAI build
+
+bundle install
+ruby wire-sources.rb
