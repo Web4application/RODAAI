@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Validation and Analytics</title>
+  <!-- Google Analytics Global Site Tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-S8TKPZXH47"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-S8TKPZXH47');
+  </script>
+</head>
+<body>
+  <div id="lead-form-feedback" style="display: none; color: red;"></div>
+  <div id="minimal-form" style="display: none; padding: 20px; background-color: #f0f0f0; border: 1px solid #ccc;">
+    <h3>Quick Contact Form</h3>
+    <input type="text" placeholder="Your Name" id="name" required>
+    <span id="name-error" style="color: #ff0000; display: none;">Name is required.</span>
+
+    <input type="email" placeholder="Your Email" id="email" required>
+    <span id="email-error" style="color: #ff0000; display: none;">Please enter a valid email address.</span>
+
+    <button id="submit-minimal-form">Submit</button>
+  </div>
+  <button id="fallback-btn">Use Fallback Form</button>
+
+  <script>
+    (function (b, d, h, e, f, a, c) {
+      a = d.getElementsByTagName("script");
+      c = false;
+      var k = e.substring(e.lastIndexOf("/") + 1);
+
+      // Configuration
+      var ENV = d.querySelector('meta[name="lead-form-env"]')?.content || "production";
+      var SENTRY_DSN = d.querySelector('meta[name="sentry-dsn"]')?.content;
+      var FORM_INITIALIZATION_DELAY = parseInt(d.querySelector('meta[name="form-initialization-delay"]')?.content) || 5000;
+      var MINIMAL_FORM = d.querySelector('meta[name="minimal-form"]')?.content === "true" || false;
+
+      var feedbackElement = d.getElementById("lead-form-feedback");
+      var fallbackButton = d.getElementById("fallback-btn");
+      var minimalFormElement = d.getElementById("minimal-form");
+      var retryCount = 0;
+      var retryDelay = FORM_INITIALIZATION_DELAY;
+
+      // Initialize Sentry (if DSN available)
+      if (SENTRY_DSN) {
+        (function(s, d) {
+          var script = d.createElement(s);
+          script.src = "https://browser.sentry-cdn.com/7.39.0/bundle.min.js";
+          script.onload = function() {
+            Sentry.init({ dsn: SENTRY_DSN, environment: ENV });
+            logMessage(`Sentry initialized in ${ENV} mode.`);
+          };
+          d.head.appendChild(script);
+        })("script", d);
+      }
+
+      // Initialize form after delay
+      setTimeout(function() {
+        if (MINIMAL_FORM) {
+          showFeedback("Unable to load the full form. Using a simplified version.");
+          showMinimalForm();
+        } else {
+          loadLeadFormScript();
+        }
+      }, retryDelay);
+
+      fallbackButton.addEventListener("click", function () {
+        showFeedback("Fallback option selected, loading minimal form.");
+        showMinimalForm();
+      });
+
+      function loadLeadFormScript() {
+        logMessage(`Loading lead form script... Attempt ${retryCount + 1}`);
+
+        var script = d.createElement(h);
+        script.async = true;
+        script.src = "https://cdn3.editmysite.com/app/marketing/js/dist/lead-form.js";
+
+        script.onload = function () {
+          logMessage("Lead form script loaded successfully.");
+          hideFeedback();
+          retryCount = 0;
+        };
+
+        script.onerror = function () {
+          retryCount++;
+          handleError("Lead form script failed to load.");
+          showFeedback("Unable to load the full form. Trying fallback option...");
+          showMinimalForm();
+        };
+
+        var firstScript = d.getElementsByTagName(h)[0];
+        firstScript.parentNode.insertBefore(script, firstScript);
+      }
+
+      function logMessage(message, data) {
+        if (ENV === "development") {
+          console.log(`[LeadForm] ${message}`, data || "");
+        }
+      }
+
+      function handleError(message) {
+        console.error(`[LeadForm] ${message}`);
+        if (SENTRY_DSN && Sentry) {
+          Sentry.captureException(new Error(message), {
+            tags: { env: ENV },
+            extra: { retryCount },
+          });
+        }
+      }
+
+      function showFeedback(message) {
+        feedbackElement.textContent = message;
+        feedbackElement.style.display = "block";
+      }
+
+      function hideFeedback() {
+        feedbackElement.style.display = "none";
+      }
+
+      function showMinimalForm() {
+        minimalFormElement.style.display = "block";
+        minimalFormElement.querySelector("#submit-minimal-form").addEventListener("click", function() {
+          if (validateForm()) {
+            trackMinimalFormSubmission();
+            alert("Minimal form submitted.");
+            hideMinimalForm();
+          }
+        });
+      }
+
+      function hideMinimalForm() {
+        minimalFormElement.style.display = "none";
+      }
+
+      // Analytics: Track Minimal Form Submission
+      function trackMinimalFormSubmission() {
+        gtag('event', 'form_submission', {
+          'event_category': 'Lead Form',
+          'event_label': 'Minimal Form',
+          'value': 1
+        });
+        console.log("Minimal form submission tracked");
+      }
+
+      // Validate Form
+      function validateForm() {
+        var isValid = true;
+
+        var nameField = d.getElementById("name");
+        var nameError = d.getElementById("name-error");
+        if (nameField.value.trim() === "") {
+          nameError.style.display = "block";
+          isValid = false;
+        } else {
+          nameError.style.display = "none";
+        }
+
+        var emailField = d.getElementById("email");
+        var emailError = d.getElementById("email-error");
+        var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailRegex.test(emailField.value)) {
+          emailError.style.display = "block";
+          isValid = false;
+        } else {
+          emailError.style.display = "none";
+        }
+
+        return isValid;
+      }
+
+      // Server-side Form Submission
+      function submitMinimalFormData(name, email) {
+        fetch('/submit-minimal-form', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name: name, email: email }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Form successfully submitted:', data);
+          trackMinimalFormSubmission();
+          alert("Form submitted successfully!");
+          hideMinimalForm();
+        })
+        .catch(error => {
+          console.error('Error submitting form:', error);
+          alert("Error submitting form. Please try again later.");
+        });
+      }
+
+      // Handle minimal form submission
+      document.getElementById("submit-minimal-form").addEventListener("click", function () {
+        if (validateForm()) {
+          var name = document.getElementById("name").value;
+          var email = document.getElementById("email").value;
+          submitMinimalFormData(name, email);
+        }
+      });
+
+      // Tracking fallback option
+      function trackFallbackForm() {
+        gtag('event', 'form_fallback', {
+          'event_category': 'Lead Form',
+          'event_label': 'Fallback Form',
+          'value': 1
+        });
+        console.log("Fallback form event tracked");
+      }
+
+      // Show fallback form
+      fallbackButton.addEventListener("click", function () {
+        showFeedback("Fallback option selected, loading minimal form.");
+        trackFallbackForm();
+        showMinimalForm();
+      });
+
+    })(window, document, "script", "https://cdn3.editmysite.com/app/marketing/js/dist/lead-form.js", "leadForm");
+  </script>
+</body>
+</html>
