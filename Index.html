@@ -54,11 +54,11 @@
         </footer>
     </div>
 
-    <script type="module" src="/assets/script.js"></script>
+    <script type="module" src="/assets/scripts.js"></script>
     <script>
   async function loadAnalysisHistory() {
     try {
-      const response = await fetch('http://localhost:3000/api/history');
+      const response = await fetch('http://localhost:8000/api/Docs/');
       const history = await response.json();
 
       const list = document.getElementById('analysis-list');
@@ -75,7 +75,7 @@
   }
 
   loadAnalysisHistory();
-  setInterval(loadAnalysisHistory, 5000); // refresh every 5 sec
+  setInterval(loadAnalysisHistory, 8000); // refresh every 5 sec
 </script>
          <script>
             (function(b,d,h,e,f,a,c){a=d.getElementsByTagName("script");c=!1;
