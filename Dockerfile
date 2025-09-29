@@ -17,9 +17,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
  && apt-get remove -y build-essential gcc \
  && apt-get autoremove -y && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
+ RUN -it -e NGROK_AUTHTOKEN=33OQXTTTmyIjVh21zBDVmxGY28O_3PhK4sybzSw72Nm2a8Dfy ngrok/ngrok:latest http --url=unreceivable-charlsie-superingeniously.ngrok-free.dev host.docker.internal:80
 
 # Copy source code
 COPY . .
-
+docker pull ngrok/ngrok
 # Use production-grade server
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+run -it -e NGROK_AUTHTOKEN=33OQXTTTmyIjVh21zBDVmxGY28O_3PhK4sybzSw72Nm2a8Dfy ngrok/ngrok:latest http --url=unreceivable-charlsie-superingeniously.ngrok-free.dev host.docker.internal:80
