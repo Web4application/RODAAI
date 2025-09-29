@@ -1,5 +1,5 @@
 // /assets/ai.js
-// Simple network helpers used by script.js
+// Simple network helpers used by scripts.js
 // Set API_BASE to your backend base URL. If running alongside the site, use relative path.
 export const API_BASE = (typeof window !== "undefined" && window.__API_BASE__) ? window.__API_BASE__ : (location.hostname === "localhost" ? "http://localhost:3000" : "/api");
 
