@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: text/html');
     echo "<h2>QR Code for: $input</h2>";
     echo "<img src='data:image/png;base64," . base64_encode($qrData) . "' />";
-    echo "<h3>🧠 GPT-4 Says:</h3><p>$reply</p>";
+    echo "<h3>🧠 GPT-5 Says:</h3><p>$reply</p>";
     exit;
 }
 ?>
