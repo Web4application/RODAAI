@@ -3,13 +3,13 @@ set -e
 
 APP_NAME="RodaAI"
 BUNDLE_ID="com.web4application.rodaai"
-IOS_VERSION="16.0"
+IOS_VERSION="26.1.0"
 
 echo "🚀 Initializing iOS App Project: $APP_NAME"
 
 # Create directory for the app
-mkdir -p $APP_NAME
-cd $APP_NAME
+mkdir -p $RodaAI
+cd $RodaAI
 
 # Create a minimal SwiftUI App with AppDelegate
 cat > ContentView.swift <<EOF
@@ -30,7 +30,7 @@ struct ContentView_Previews: PreviewProvider {
 }
 EOF
 
-cat > ${APP_NAME}App.swift <<EOF
+cat > ${RodaAI}App.swift <<EOF
 import SwiftUI
 
 @main
